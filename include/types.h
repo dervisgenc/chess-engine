@@ -24,7 +24,7 @@ enum Castling_Rights : std::uint8_t {
 };
 
 enum PieceType : std::uint8_t {
-    NO_PIECE,
+    NO_PIECE_TYPE,
     PAWN,
     KNIGHT,
     BISHOP,
@@ -33,7 +33,7 @@ enum PieceType : std::uint8_t {
     KING,
 
     ALL_PIECES = 0,
-    PIECE_NUMBERS = 8 
+    PIECE_TYE_NUMBERS = 8 
 };
 
 enum Piece : std::uint8_t {
@@ -45,8 +45,8 @@ enum Piece : std::uint8_t {
     WHITE_QUEEN,                // 5
     WHITE_KING ,                // 6
     BLACK_PAWN = PAWN + 8,      //0b 0001 0001 9
-    BLACK_BISHOP,               // 10
-    BLACK_KNIGHT,               // 11
+    BLACK_KNIGHT,               // 10
+    BLACK_BISHOP,               // 11
     BLACK_ROOK,                 // 12
     BLACK_QUEEN,                // 13
     BLACK_KING,                 // 14
