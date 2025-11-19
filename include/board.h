@@ -7,7 +7,8 @@ public:
     Board(/* args */);
     ~Board();
 
-    void parse_fen(const std::string& fen);
+    void parse_fen(const std::string&);
+    std::string serialize_fen();
 
     
     private:
