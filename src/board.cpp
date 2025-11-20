@@ -252,12 +252,14 @@ std::string Board::serialize_fen(){
     
     fen += " ";
 
-    if(this->m_side_to_move == WHITE){
-        fen += "w";
-    }else {
-        fen += "b";
-    }
-    
+    std::string castling_str = "";
+    if (m_castling_rights & WHITE_CASTLING_00)  castling_str += "K";
+    if (m_castling_rights & WHITE_CASTLING_000) castling_str += "Q";
+    if (m_castling_rights & BLACK_CASTLING_00)  castling_str += "k";
+    if (m_castling_rights & BLACK_CASTLING_000) castling_str += "q";
+
+    if (castling_str == "") castling_str = "-";
+    fen += castling_str;
     fen += " ";
 
     if (this->m_castling_rights == ANY_CASTLING)
