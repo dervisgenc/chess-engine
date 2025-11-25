@@ -1,7 +1,6 @@
 //board.cpp
 #include "board.h"
 #include <sstream>
-#include <iostream>
 #include <bitset>
 
 Board::Board(){
@@ -249,7 +248,14 @@ std::string Board::serialize_fen(){
         }
         
     }
-    
+    fen += " ";
+
+    if(this->m_side_to_move == WHITE){
+        fen += "w";
+    }else {
+        fen += "b";
+    }
+
     fen += " ";
 
     std::string castling_str = "";
@@ -260,27 +266,6 @@ std::string Board::serialize_fen(){
 
     if (castling_str == "") castling_str = "-";
     fen += castling_str;
-    fen += " ";
-
-    if (this->m_castling_rights == ANY_CASTLING)
-    {
-        fen += "KQkq";
-    }else if(this->m_castling_rights == WHITE_CASTLING){
-        fen += "KQ";
-    }else if(this->m_castling_rights == WHITE_CASTLING_00){
-        fen += "K";
-    }else if(this->m_castling_rights == WHITE_CASTLING_000){
-        fen += "Q";
-    }else if (this->m_castling_rights == BLACK_CASTLING){
-        fen += "kq";
-    }else if (this->m_castling_rights == BLACK_CASTLING_000){
-        fen += "q";
-    }else if (this->m_castling_rights == BLACK_CASTLING_00){
-        fen += "k";
-    }else{
-        fen += "-";
-    }
-    
     fen += " ";
 
     if (this->m_en_passant_square != SQ_NONE)
@@ -299,4 +284,53 @@ std::string Board::serialize_fen(){
     fen += " " + std::to_string(this->m_total_moves);
 
     return fen;
+}
+
+void Board::visualize_board(){
+    char rank_str[21];
+    std::fill_n(rank_str, 20, ' ');
+    rank_str[20] = '\0';
+    
+    int i;
+    //file 7 ise index 16
+    for (int rank = 7; rank >= 0; rank--)
+    {
+        rank_str[0] = (rank + 1) + '0';
+        for (int file = 0; file < 8; file++)
+        {
+            i = rank * 8 + file;
+            if (this->m_bitboards[BLACK_PAWN] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'p';
+            }else if(this->m_bitboards[BLACK_ROOK] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'r';
+            }else if(this->m_bitboards[BLACK_BISHOP] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'b';
+            }else if(this->m_bitboards[BLACK_KNIGHT] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'n';
+            }else if(this->m_bitboards[BLACK_QUEEN] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'q';
+            }else if(this->m_bitboards[BLACK_KING] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'k';
+            }else if(this->m_bitboards[WHITE_PAWN] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'P';
+            }else if(this->m_bitboards[WHITE_ROOK] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'R';
+            }else if(this->m_bitboards[WHITE_KNIGHT] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'N';
+            }else if(this->m_bitboards[WHITE_BISHOP] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'B';
+            }else if(this->m_bitboards[WHITE_QUEEN] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'Q';
+            }else if(this->m_bitboards[WHITE_KING] & (1ULL << i)){
+                rank_str[file *2 + 4] = 'K';
+            }else{
+                rank_str[file *2 + 4] = '.';
+            }
+
+        }
+        std::cout<< rank_str << std::endl;        
+    }
+    std::cout<<std::endl;
+    std::cout<<"    a b c d e f g h"<<std::endl;
 }

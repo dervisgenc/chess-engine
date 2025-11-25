@@ -1,5 +1,7 @@
 #include "types.h"
 #include <string>
+#include <iostream>
+
 
 class Board
 {
@@ -9,6 +11,7 @@ public:
 
     void parse_fen(const std::string&);
     std::string serialize_fen();
+    void visualize_board();
 
     
     private:
