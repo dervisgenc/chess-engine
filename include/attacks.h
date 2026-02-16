@@ -3,6 +3,7 @@
 #define ATTACKS_H
 
 #include <cstdint>
+#include "types.h"
 
 // We store knight pawn and king moves bc they slide. Squares they can go doesn't change by position.
 // To store knights attacks on each square - It's kind a look up table

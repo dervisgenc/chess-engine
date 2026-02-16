@@ -82,6 +82,11 @@ enum File : std::uint8_t {
     FILE_NUMBERS
 };
 
+uint64_t not_a_file = 0xFEFEFEFEFEFEFEFE;
+uint64_t not_h_file = 0x7f7f7f7f7f7f7f7f;
+uint64_t not_ab_file = 0xfcfcfcfcfcfcfcfc;
+uint64_t not_gh_file = 0x3f3f3f3f3f3f3f3f;
+
 enum Rank : std::uint8_t {
     RANK_1,
     RANK_2,
