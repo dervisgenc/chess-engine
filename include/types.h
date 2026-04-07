@@ -133,6 +133,13 @@ enum Square : std::uint8_t
     SQUARE_NUMBERS = 64
 };
 
+constexpr inline Square operator++(Square &sq, int)
+{
+    Square temp = sq;
+    sq = static_cast<Square>(static_cast<int>(sq) + 1);
+    return temp;
+}
+
 enum File : std::uint8_t
 {
     FILE_A,
@@ -145,12 +152,25 @@ enum File : std::uint8_t
     FILE_H,
     FILE_NUMBERS
 };
+namespace Mask
+{
+    constexpr uint64_t not_a_file = 0xFEFEFEFEFEFEFEFE;
+    constexpr uint64_t not_h_file = 0x7f7f7f7f7f7f7f7f;
+    constexpr uint64_t not_ab_file = 0xfcfcfcfcfcfcfcfc;
+    constexpr uint64_t not_gh_file = 0x3f3f3f3f3f3f3f3f;
 
-constexpr uint64_t not_a_file = 0xFEFEFEFEFEFEFEFE;
-constexpr uint64_t not_h_file = 0x7f7f7f7f7f7f7f7f;
-constexpr uint64_t not_ab_file = 0xfcfcfcfcfcfcfcfc;
-constexpr uint64_t not_gh_file = 0x3f3f3f3f3f3f3f3f;
-
+}
+namespace Direction
+{
+    constexpr uint64_t north(uint64_t b) { return b << 8; }
+    constexpr uint64_t south(uint64_t b) { return b >> 8; }
+    constexpr uint64_t east(uint64_t b) { return (b & Mask::not_h_file) << 1; }
+    constexpr uint64_t west(uint64_t b) { return (b & Mask::not_a_file) >> 1; }
+    constexpr uint64_t north_west(uint64_t b) { return (b & Mask::not_a_file) << 7; }
+    constexpr uint64_t north_east(uint64_t b) { return (b & Mask::not_h_file) << 9; }
+    constexpr uint64_t south_east(uint64_t b) { return (b & Mask::not_h_file) >> 7; }
+    constexpr uint64_t south_west(uint64_t b) { return (b & Mask::not_a_file) >> 9; }
+}
 enum Rank : std::uint8_t
 {
     RANK_1,
