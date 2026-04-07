@@ -1,18 +1,18 @@
-//board.cpp
+// board.cpp
 #include "board.h"
 #include <sstream>
 #include <bitset>
 
-Board::Board(){
-
+Board::Board()
+{
 }
 
-Board::~Board(){
-
+Board::~Board()
+{
 }
 
-
-void Board::parse_fen(const std::string& fen){
+void Board::parse_fen(const std::string &fen)
+{
 
     std::stringstream ss(fen);
 
@@ -34,18 +34,18 @@ void Board::parse_fen(const std::string& fen){
     int file = 0;
     int square_index = 0;
     Piece piece;
-    
+
     for (size_t i = 0; i < board.length(); i++)
     {
         char cursor = board[i];
-        
+
         if (cursor == '/')
         {
             rank--;
             file = 0;
-            
         }
-        else{
+        else
+        {
             square_index = (rank * 8) + file;
 
             switch (cursor)
@@ -88,25 +88,23 @@ void Board::parse_fen(const std::string& fen){
                 break;
             default:
                 piece = NO_PIECE;
-                int num = cursor - '0'; //No need to use stoi bc it can be 8 max
+                int num = cursor - '0'; // No need to use stoi bc it can be 8 max
                 file += num - 1;
                 break;
-            
             }
-            
-            this->m_bitboards[piece] = m_bitboards[piece] | (1ULL << square_index); //Find the piece location and add to the board by OR
+
+            this->m_bitboards[piece] = m_bitboards[piece] | (1ULL << square_index); // Find the piece location and add to the board by OR
 
             file++;
         }
-        
     }
-
 
     if (side == "w")
     {
         this->m_side_to_move = WHITE;
     }
-    else {
+    else
+    {
         this->m_side_to_move = BLACK;
     }
 
@@ -128,32 +126,32 @@ void Board::parse_fen(const std::string& fen){
             this->m_castling_rights = static_cast<Castling_Rights>(this->m_castling_rights | BLACK_CASTLING_00);
 
             break;
-        
+
         default:
             this->m_castling_rights = NO_CASTLING;
             break;
         }
     }
-    
-    if (ep != "-") {
+
+    if (ep != "-")
+    {
         int file = ep[0] - 'a';
         int rank = ep[1] - '1';
         this->m_en_passant_square = static_cast<Square>(rank * 8 + file);
-    } else {
+    }
+    else
+    {
         this->m_en_passant_square = SQ_NONE;
     }
 
     this->m_fifty_moves_rule_counter = std::stoi(half_move);
     this->m_total_moves = std::stoi(full_move);
-
 }
 
-std::string Board::serialize_fen(){
+std::string Board::serialize_fen()
+{
     std::string fen = "";
-    int counter = 0;
-    bool is_prev_empty = false;
     int empty_counter = 0;
-    int file = 0;
     int i;
 
     for (int rank = 7; rank >= 0; rank--)
@@ -163,108 +161,152 @@ std::string Board::serialize_fen(){
             i = rank * 8 + file;
             if (this->m_bitboards[BLACK_PAWN] & (1ULL << i))
             {
-                if(empty_counter != 0){
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
-                fen  += "p";
-            }else if(this->m_bitboards[BLACK_ROOK] & (1ULL << i)){
-                if(empty_counter != 0){
+                fen += "p";
+            }
+            else if (this->m_bitboards[BLACK_ROOK] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "r";
-            }else if(this->m_bitboards[BLACK_BISHOP] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[BLACK_BISHOP] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "b";
-            }else if(this->m_bitboards[BLACK_KNIGHT] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[BLACK_KNIGHT] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "n";
-            }else if(this->m_bitboards[BLACK_QUEEN] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[BLACK_QUEEN] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "q";
-            }else if(this->m_bitboards[BLACK_KING] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[BLACK_KING] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "k";
-            }else if(this->m_bitboards[WHITE_PAWN] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_PAWN] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "P";
-            }else if(this->m_bitboards[WHITE_ROOK] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_ROOK] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "R";
-            }else if(this->m_bitboards[WHITE_KNIGHT] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_KNIGHT] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "N";
-            }else if(this->m_bitboards[WHITE_BISHOP] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_BISHOP] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "B";
-            }else if(this->m_bitboards[WHITE_QUEEN] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_QUEEN] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "Q";
-            }else if(this->m_bitboards[WHITE_KING] & (1ULL << i)){
-                if(empty_counter != 0){
+            }
+            else if (this->m_bitboards[WHITE_KING] & (1ULL << i))
+            {
+                if (empty_counter != 0)
+                {
                     fen += std::to_string(empty_counter);
                 }
                 empty_counter = 0;
                 fen += "K";
-            }else{
+            }
+            else
+            {
                 empty_counter++;
             }
-
         }
-        if (empty_counter != 0) {
+        if (empty_counter != 0)
+        {
             fen += std::to_string(empty_counter);
             empty_counter = 0;
         }
-        if (rank > 0) {
+        if (rank > 0)
+        {
             fen += "/";
         }
-        
     }
     fen += " ";
 
-    if(this->m_side_to_move == WHITE){
+    if (this->m_side_to_move == WHITE)
+    {
         fen += "w";
-    }else {
+    }
+    else
+    {
         fen += "b";
     }
 
     fen += " ";
 
     std::string castling_str = "";
-    if (m_castling_rights & WHITE_CASTLING_00)  castling_str += "K";
-    if (m_castling_rights & WHITE_CASTLING_000) castling_str += "Q";
-    if (m_castling_rights & BLACK_CASTLING_00)  castling_str += "k";
-    if (m_castling_rights & BLACK_CASTLING_000) castling_str += "q";
+    if (m_castling_rights & WHITE_CASTLING_00)
+        castling_str += "K";
+    if (m_castling_rights & WHITE_CASTLING_000)
+        castling_str += "Q";
+    if (m_castling_rights & BLACK_CASTLING_00)
+        castling_str += "k";
+    if (m_castling_rights & BLACK_CASTLING_000)
+        castling_str += "q";
 
-    if (castling_str == "") castling_str = "-";
+    if (castling_str == "")
+        castling_str = "-";
     fen += castling_str;
     fen += " ";
 
@@ -273,26 +315,28 @@ std::string Board::serialize_fen(){
         int rank = this->m_en_passant_square / 8;
         int file = this->m_en_passant_square % 8;
 
-        fen +=  (char)('a' + file);
-        fen +=  (char)('1' + rank);
+        fen += (char)('a' + file);
+        fen += (char)('1' + rank);
     }
-    else{
+    else
+    {
         fen += "-";
     }
-    
+
     fen += " " + std::to_string(this->m_fifty_moves_rule_counter);
     fen += " " + std::to_string(this->m_total_moves);
 
     return fen;
 }
 
-void Board::visualize_board(){
+void Board::visualize_board()
+{
     char rank_str[21];
     std::fill_n(rank_str, 20, ' ');
     rank_str[20] = '\0';
-    
+
     int i;
-    //file 7 ise index 16
+    // file 7 ise index 16
     for (int rank = 7; rank >= 0; rank--)
     {
         rank_str[0] = (rank + 1) + '0';
@@ -302,35 +346,58 @@ void Board::visualize_board(){
             if (this->m_bitboards[BLACK_PAWN] & (1ULL << i))
             {
                 rank_str[file * 2 + 4] = 'p';
-            }else if(this->m_bitboards[BLACK_ROOK] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'r';
-            }else if(this->m_bitboards[BLACK_BISHOP] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'b';
-            }else if(this->m_bitboards[BLACK_KNIGHT] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'n';
-            }else if(this->m_bitboards[BLACK_QUEEN] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'q';
-            }else if(this->m_bitboards[BLACK_KING] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'k';
-            }else if(this->m_bitboards[WHITE_PAWN] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'P';
-            }else if(this->m_bitboards[WHITE_ROOK] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'R';
-            }else if(this->m_bitboards[WHITE_KNIGHT] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'N';
-            }else if(this->m_bitboards[WHITE_BISHOP] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'B';
-            }else if(this->m_bitboards[WHITE_QUEEN] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'Q';
-            }else if(this->m_bitboards[WHITE_KING] & (1ULL << i)){
-                rank_str[file *2 + 4] = 'K';
-            }else{
-                rank_str[file *2 + 4] = '.';
             }
-
+            else if (this->m_bitboards[BLACK_ROOK] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'r';
+            }
+            else if (this->m_bitboards[BLACK_BISHOP] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'b';
+            }
+            else if (this->m_bitboards[BLACK_KNIGHT] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'n';
+            }
+            else if (this->m_bitboards[BLACK_QUEEN] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'q';
+            }
+            else if (this->m_bitboards[BLACK_KING] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'k';
+            }
+            else if (this->m_bitboards[WHITE_PAWN] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'P';
+            }
+            else if (this->m_bitboards[WHITE_ROOK] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'R';
+            }
+            else if (this->m_bitboards[WHITE_KNIGHT] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'N';
+            }
+            else if (this->m_bitboards[WHITE_BISHOP] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'B';
+            }
+            else if (this->m_bitboards[WHITE_QUEEN] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'Q';
+            }
+            else if (this->m_bitboards[WHITE_KING] & (1ULL << i))
+            {
+                rank_str[file * 2 + 4] = 'K';
+            }
+            else
+            {
+                rank_str[file * 2 + 4] = '.';
+            }
         }
-        std::cout<< rank_str << std::endl;        
+        std::cout << rank_str << std::endl;
     }
-    std::cout<<std::endl;
-    std::cout<<"    a b c d e f g h"<<std::endl;
+    std::cout << std::endl;
+    std::cout << "    a b c d e f g h" << std::endl;
 }
