@@ -2,7 +2,7 @@
 #define TYPES_H
 
 #include <cstdint>
-
+#include <cassert>
 enum Color : std::uint8_t
 {
     WHITE = 0b0,
@@ -171,6 +171,19 @@ namespace Direction
     constexpr uint64_t south_east(uint64_t b) { return (b & Mask::not_h_file) >> 7; }
     constexpr uint64_t south_west(uint64_t b) { return (b & Mask::not_a_file) >> 9; }
 }
+
+// constexpr inline int bitscan_forward(uint64_t bb)
+// {
+//     assert(bb != 0);
+//     return __builtin_ctzll(bb);
+// }
+
+// constexpr inline int bitscan_forward(uint64_t bb)
+// {
+//     assert(bb != 0);
+//     return 63 - __builtin_clzll(bb);
+// }
+
 enum Rank : std::uint8_t
 {
     RANK_1,
@@ -182,6 +195,19 @@ enum Rank : std::uint8_t
     RANK_7,
     RANK_8,
     RANK_NUMBERS
+};
+
+enum RayDirection : std::uint8_t
+{
+    RAY_NORTH,
+    RAY_SOUTH,
+    RAY_EAST,
+    RAY_WEST,
+    RAY_NORTH_EAST,
+    RAY_NORTH_WEST,
+    RAY_SOUTH_EAST,
+    RAY_SOUTH_WEST,
+    RAY_DIRECTION_NUMBERS
 };
 
 #endif

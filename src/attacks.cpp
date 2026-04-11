@@ -4,6 +4,7 @@
 uint64_t knight_attacks[64];
 uint64_t king_attacks[64];
 uint64_t pawn_attacks[2][64];
+uint64_t ray_attacks[8][64];
 
 uint64_t generate_knight_moves(Square square)
 {
@@ -70,7 +71,34 @@ void print_bitboard(uint64_t bitboard)
         std::cout << std::endl;
     }
     std::cout << std::endl
-              << "       a b c d e f g h" << std::endl;
+              << "        a b c d e f g h" << std::endl;
+}
+
+uint64_t compute_ray(Square square, uint64_t (*func)(uint64_t))
+{
+    uint64_t ray = 0ULL;
+    // Convert sqaure to a bitboard
+    uint64_t b = 1ULL << square;
+
+    while ((b = func(b)))
+        ray |= b;
+
+    return ray;
+}
+
+void init_ray_attacks()
+{
+    for (Square sq = SQ_A1; sq < SQUARE_NUMBERS; sq++)
+    {
+        ray_attacks[RAY_NORTH][sq] = compute_ray(sq, Direction::north);
+        ray_attacks[RAY_SOUTH][sq] = compute_ray(sq, Direction::south);
+        ray_attacks[RAY_EAST][sq] = compute_ray(sq, Direction::east);
+        ray_attacks[RAY_WEST][sq] = compute_ray(sq, Direction::west);
+        ray_attacks[RAY_NORTH_EAST][sq] = compute_ray(sq, Direction::north_east);
+        ray_attacks[RAY_NORTH_WEST][sq] = compute_ray(sq, Direction::north_west);
+        ray_attacks[RAY_SOUTH_EAST][sq] = compute_ray(sq, Direction::south_east);
+        ray_attacks[RAY_SOUTH_WEST][sq] = compute_ray(sq, Direction::south_west);
+    }
 }
 
 void init_attacks()
@@ -80,4 +108,5 @@ void init_attacks()
         king_attacks[sq] = generate_king_moves(sq);
         knight_attacks[sq] = generate_knight_moves(sq);
     }
+    init_ray_attacks();
 }
