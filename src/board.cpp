@@ -92,8 +92,10 @@ void Board::parse_fen(const std::string &fen)
                 file += num - 1;
                 break;
             }
-
-            this->m_bitboards[piece] = m_bitboards[piece] | (1ULL << square_index); // Find the piece location and add to the board by OR
+            if (piece != NO_PIECE)
+            {
+                this->m_bitboards[piece] = m_bitboards[piece] | (1ULL << square_index); // Find the piece location and add to the board by OR
+            }
 
             file++;
         }
@@ -418,8 +420,8 @@ uint64_t Board::occupancy(Color side) const
 
     // WHITE Pieces 1-6, BLACK Pieces 9-15
     int start = (side == WHITE) ? WHITE_PAWN : BLACK_PAWN;
-
-    for (; start < start + 6; start++)
+    int end = start + 6;
+    for (; start < end; start++)
     {
         occupancy |= m_bitboards[start];
     }
