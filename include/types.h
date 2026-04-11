@@ -162,27 +162,27 @@ namespace Mask
 }
 namespace Direction
 {
-    constexpr uint64_t north(uint64_t b) { return b << 8; }
-    constexpr uint64_t south(uint64_t b) { return b >> 8; }
-    constexpr uint64_t east(uint64_t b) { return (b & Mask::not_h_file) << 1; }
-    constexpr uint64_t west(uint64_t b) { return (b & Mask::not_a_file) >> 1; }
-    constexpr uint64_t north_west(uint64_t b) { return (b & Mask::not_a_file) << 7; }
     constexpr uint64_t north_east(uint64_t b) { return (b & Mask::not_h_file) << 9; }
+    constexpr uint64_t north(uint64_t b) { return b << 8; }
+    constexpr uint64_t north_west(uint64_t b) { return (b & Mask::not_a_file) << 7; }
+    constexpr uint64_t west(uint64_t b) { return (b & Mask::not_a_file) >> 1; }
+    constexpr uint64_t east(uint64_t b) { return (b & Mask::not_h_file) << 1; }
     constexpr uint64_t south_east(uint64_t b) { return (b & Mask::not_h_file) >> 7; }
+    constexpr uint64_t south(uint64_t b) { return b >> 8; }
     constexpr uint64_t south_west(uint64_t b) { return (b & Mask::not_a_file) >> 9; }
 }
 
-// constexpr inline int bitscan_forward(uint64_t bb)
-// {
-//     assert(bb != 0);
-//     return __builtin_ctzll(bb);
-// }
+constexpr inline int bitscan_forward(uint64_t bb)
+{
+    assert(bb != 0);
+    return __builtin_ctzll(bb);
+}
 
-// constexpr inline int bitscan_forward(uint64_t bb)
-// {
-//     assert(bb != 0);
-//     return 63 - __builtin_clzll(bb);
-// }
+constexpr inline int bitscan_reverse(uint64_t bb)
+{
+    assert(bb != 0);
+    return 63 - __builtin_clzll(bb);
+}
 
 enum Rank : std::uint8_t
 {

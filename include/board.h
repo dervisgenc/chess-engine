@@ -12,6 +12,8 @@ public:
     void parse_fen(const std::string &);
     std::string serialize_fen();
     void visualize_board();
+    uint64_t occupancy() const;
+    uint64_t occupancy(Color) const;
 
 private:
     uint64_t m_bitboards[PIECE_NUMBERS] = {0}; // 4 bitboards are wasted but simplifies indexing

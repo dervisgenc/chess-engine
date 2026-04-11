@@ -401,3 +401,27 @@ void Board::visualize_board()
     std::cout << std::endl;
     std::cout << "    a b c d e f g h" << std::endl;
 }
+
+uint64_t Board::occupancy() const
+{
+    uint64_t occupancy = 0;
+    for (int i = 0; i < PIECE_NUMBERS; i++)
+    {
+        occupancy |= m_bitboards[i];
+    }
+    return occupancy;
+}
+
+uint64_t Board::occupancy(Color side) const
+{
+    uint64_t occupancy = 0;
+
+    // WHITE Pieces 1-6, BLACK Pieces 9-15
+    int start = (side == WHITE) ? WHITE_PAWN : BLACK_PAWN;
+
+    for (; start < start + 6; start++)
+    {
+        occupancy |= m_bitboards[start];
+    }
+    return occupancy;
+}
