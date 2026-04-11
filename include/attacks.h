@@ -9,8 +9,6 @@
 extern uint64_t knight_attacks[64];
 
 extern uint64_t king_attacks[64];
-// One for black one for white bc pawn moves opposite sides
-extern uint64_t pawn_attacks[2][64];
 
 // For each square and each direction
 extern uint64_t ray_attacks[8][64];

@@ -3,7 +3,6 @@
 // Define the look-up tables
 uint64_t knight_attacks[64];
 uint64_t king_attacks[64];
-uint64_t pawn_attacks[2][64];
 uint64_t ray_attacks[8][64];
 
 uint64_t generate_knight_moves(Square square)
