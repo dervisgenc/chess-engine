@@ -210,4 +210,36 @@ enum RayDirection : std::uint8_t
     RAY_DIRECTION_NUMBERS
 };
 
+enum MoveFlag : std::uint8_t
+{
+    QUIET,
+    CAPTURE,
+    DOUBLE_PAWN_PUSH,
+    KING_CASTLE,
+    QUEEN_CASTLE,
+    EN_PASSANT,
+    KNIGHT_PROMOTION,
+    BISHOP_PROMOTOION,
+    ROOK_PROMOTION,
+    QUEEN_PROMOTION,
+    KNIGHT_PROMOTION_CAPTURE,
+    BISHOP_PROMOTOION_CAPTURE,
+    ROOK_PROMOTION_CAPTURE,
+    QUEEN_PROMOTION_CAPTURE
+};
+
+struct Move
+{
+    Square from;
+    Square to;
+    MoveFlag flag;
+};
+
+struct MoveList
+{
+    Move moves[256]; // Teoretically, there can be at most 218 moves in a position
+    int count = 0;
+    void add(Move mv) { moves[count++] = mv; }
+};
+
 #endif

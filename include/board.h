@@ -16,6 +16,18 @@ public:
     uint64_t occupancy() const;
     uint64_t occupancy(Color) const;
 
+    uint64_t bitboard(Piece p) const { return m_bitboards[p]; }
+    void set_bitboard(Piece p, uint64_t bb) { m_bitboards[p] = bb; }
+
+    Color side_to_move() const { return m_side_to_move; }
+    void set_side_to_move(Color c) { m_side_to_move = c; }
+
+    Square en_passant_square() const { return m_en_passant_square; }
+    void set_en_passant_square(Square sq) { m_en_passant_square = sq; }
+
+    Castling_Rights castling_rights() const { return m_castling_rights; }
+    void set_castling_rights(Castling_Rights cr) { m_castling_rights = cr; }
+
 private:
     uint64_t m_bitboards[PIECE_NUMBERS] = {0}; // 4 bitboards are wasted but simplifies indexing
     Color m_side_to_move = WHITE;
