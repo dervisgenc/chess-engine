@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Werror -Iinclude
+CXXFLAGS = -std=c++20 -Wall -Werror -Iinclude
 
 SRC = src/main.cpp src/board.cpp src/attacks.cpp src/movegen.cpp
 TARGET = chess-engine
