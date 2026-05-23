@@ -190,9 +190,9 @@ void generate_pseudo_rook_moves(const Board &board, Color side, MoveList &list)
     }
 }
 
-void generate_bishop_bishop_moves(const Board &board, Color side, MoveList &list)
+void generate_pseudo_bishop_moves(const Board &board, Color side, MoveList &list)
 {
-    uint64_t bishops = board.bitboard(side == WHITE ? WHITE_ROOK : BLACK_BISHOP);
+    uint64_t bishops = board.bitboard(side == WHITE ? WHITE_BISHOP : BLACK_BISHOP);
     while (bishops)
     {
         int sq = bitscan_forward(bishops);
@@ -249,4 +249,54 @@ void generate_pseudo_queen_moves(const Board &board, Color side, MoveList &list)
             list.add(Move{static_cast<Square>(sq), static_cast<Square>(move_to), QUIET});
         }
     }
+}
+
+void generate_pseudo_castling_moves(const Board &board, Color side, MoveList &list)
+{
+    if (side == WHITE)
+    {
+        if (board.castling_rights() & WHITE_CASTLING_00)
+        {
+            if (board.occupancy() & ((1ULL << SQ_F1) | (1Ull << SQ_G1)))
+            {
+                list.add(Move{SQ_E1, SQ_G1, KING_CASTLE});
+            }
+        }
+        if (board.castling_rights() & WHITE_CASTLING_000)
+        {
+            if (board.occupancy() & ((1ULL << SQ_B1) | (1Ull << SQ_C1) | (1ULL << SQ_D1)))
+            {
+                list.add(Move{SQ_E1, SQ_C1, QUEEN_CASTLE});
+            }
+        }
+    }
+    else
+    {
+        if (board.castling_rights() & BLACK_CASTLING_00)
+        {
+            if (board.occupancy() & ((1ULL << SQ_F8) | (1Ull << SQ_G8)))
+            {
+                list.add(Move{SQ_E8, SQ_G8, KING_CASTLE});
+            }
+        }
+        if (board.castling_rights() & BLACK_CASTLING_000)
+        {
+            if (board.occupancy() & ((1ULL << SQ_B8) | (1Ull << SQ_C8) | (1ULL < SQ_D8)))
+            {
+                list.add(Move{SQ_E8, SQ_C8, QUEEN_CASTLE});
+            }
+        }
+    }
+}
+void generate_pseudo_moves(const Board &board, MoveList &list)
+{
+    Color side = board.side_to_move();
+
+    generate_pseudo_bishop_moves(board, side, list);
+    generate_pseudo_knight_moves(board, side, list);
+    generate_pseudo_king_moves(board, side, list);
+    generate_pseudo_queen_moves(board, side, list);
+    generate_pseudo_rook_moves(board, side, list);
+
+    generate_pseudo_castling_moves(board, side, list);
 }
