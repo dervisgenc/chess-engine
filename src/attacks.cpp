@@ -4,6 +4,7 @@
 uint64_t knight_attacks[64];
 uint64_t king_attacks[64];
 uint64_t ray_attacks[8][64];
+uint64_t pawn_attacks[2][64];
 
 uint64_t generate_knight_moves(Square square)
 {
@@ -53,6 +54,32 @@ uint64_t generate_king_moves(Square square)
     return attacks;
 }
 
+uint64_t generate_pawn_attacks(Color color, Square sq)
+{
+    uint64_t pawn_board = 1ULL << sq;
+
+    if (color == WHITE)
+    {
+        return Direction::north_east(pawn_board) | Direction::north_west(pawn_board);
+    }
+    else
+    {
+        return Direction::south_east(pawn_board) | Direction::south_west(pawn_board);
+    }
+}
+
+uint64_t compute_ray(Square square, uint64_t (*func)(uint64_t))
+{
+    uint64_t ray = 0ULL;
+    // Convert sqaure to a bitboard
+    uint64_t b = 1ULL << square;
+
+    while ((b = func(b)))
+        ray |= b;
+
+    return ray;
+}
+
 void print_bitboard(uint64_t bitboard)
 {
     std::cout << "" << std::endl;
@@ -71,18 +98,6 @@ void print_bitboard(uint64_t bitboard)
     }
     std::cout << std::endl
               << "        a b c d e f g h" << std::endl;
-}
-
-uint64_t compute_ray(Square square, uint64_t (*func)(uint64_t))
-{
-    uint64_t ray = 0ULL;
-    // Convert sqaure to a bitboard
-    uint64_t b = 1ULL << square;
-
-    while ((b = func(b)))
-        ray |= b;
-
-    return ray;
 }
 
 void init_ray_attacks()
@@ -106,6 +121,8 @@ void init_attacks()
     {
         king_attacks[sq] = generate_king_moves(sq);
         knight_attacks[sq] = generate_knight_moves(sq);
+        pawn_attacks[WHITE][sq] = generate_pawn_attacks(WHITE, sq);
+        pawn_attacks[BLACK][sq] = generate_pawn_attacks(BLACK, sq);
     }
     init_ray_attacks();
 }

@@ -12,6 +12,8 @@ void generate_pseudo_knight_moves(const Board &board, Color side, MoveList &list
 void generate_pseudo_king_moves(const Board &board, Color side, MoveList &list);
 void generate_bishop_bishop_moves(const Board &board, Color side, MoveList &list);
 void generate_pseudo_queen_moves(const Board &board, Color side, MoveList &list);
+void generate_pseudo_white_pawn_moves(const Board &board, MoveList &list);
+void generate_pseudo_black_pawn_moves(const Board &board, MoveList &list);
 
 void generate_pseudo_castling_moves(const Board &board, Color side, MoveList &list);
 
